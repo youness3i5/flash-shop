@@ -59,8 +59,8 @@ export default function Checkout() {
         <div className="co-progress">
           {STEPS.map((s, i) => (
             <React.Fragment key={s}>
-              <div className={`co-step${i + 1 <= step ? ' done' : ''}${i + 1 === step ? ' active' : ''}`}>
-                <div className="co-step-dot">{i + 1 <= step ? (i + 1 < step ? '✓' : i + 1) : i + 1}</div>
+              <div className={`co-step${i + 1 < step ? ' done' : ''}${i + 1 === step ? ' active' : ''}`}>
+                <div className="co-step-dot">{i + 1 < step ? '✓' : i + 1}</div>
                 <span>{s}</span>
               </div>
               {i < STEPS.length - 1 && <div className={`co-line${i + 1 < step ? ' done' : ''}`} />}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext.jsx';
 
 export default function Header() {
@@ -30,12 +30,12 @@ export default function Header() {
           </Link>
 
           <nav className="header-nav">
-            <Link to="/catalogue" className="nav-link">Catalogue</Link>
-            <Link to="/catalogue?category=Été" className="nav-link">☀️ Été</Link>
-            <Link to="/catalogue?category=Mode" className="nav-link">👕 Mode</Link>
-            <Link to="/catalogue?category=Audio" className="nav-link">🎧 Audio</Link>
-            <Link to="/catalogue?category=Maison" className="nav-link">🏠 Maison</Link>
-            <Link to="/aide" className="nav-link nav-link-help">💬 Aide</Link>
+            <NavLink to="/catalogue" end className={({ isActive }) => `nav-link${isActive ? ' nav-active' : ''}`}>Catalogue</NavLink>
+            <Link to="/catalogue?category=Été" className={`nav-link${location.search.includes('Été') ? ' nav-active' : ''}`}>☀️ Été</Link>
+            <Link to="/catalogue?category=Mode" className={`nav-link${location.search.includes('Mode') ? ' nav-active' : ''}`}>👕 Mode</Link>
+            <Link to="/catalogue?category=Audio" className={`nav-link${location.search.includes('Audio') ? ' nav-active' : ''}`}>🎧 Audio</Link>
+            <Link to="/catalogue?category=Maison" className={`nav-link${location.search.includes('Maison') ? ' nav-active' : ''}`}>🏠 Maison</Link>
+            <NavLink to="/aide" className={({ isActive }) => `nav-link nav-link-help${isActive ? ' nav-active-help' : ''}`}>💬 Aide</NavLink>
           </nav>
 
           <div className="header-actions">
@@ -144,8 +144,10 @@ export default function Header() {
           color: var(--primary);
           background: var(--primary-light);
         }
+        .nav-active { color: var(--primary) !important; background: var(--primary-light); }
         .nav-link-help { color: var(--accent); }
         .nav-link-help:hover { background: var(--accent-light); color: var(--accent); }
+        .nav-active-help { background: var(--accent-light) !important; }
         .header-actions {
           display: flex;
           align-items: center;

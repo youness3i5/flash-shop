@@ -92,7 +92,7 @@ export default function Home() {
       {/* ── CATÉGORIES ── */}
       <section className="section">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head reveal">
             <div>
               <h2 className="section-title">Explorer par catégorie</h2>
               <p className="section-sub">Trouve le produit parfait pour toi</p>
@@ -103,8 +103,8 @@ export default function Home() {
               <Link
                 key={cat.name}
                 to={`/catalogue?category=${cat.name}`}
-                className={`cat-card anim-fade-up anim-d${i + 1}`}
-                style={{ '--c': cat.color }}
+                className="cat-card reveal"
+                style={{ '--c': cat.color, transitionDelay: `${i * 0.08}s` }}
               >
                 <div className="cat-img">
                   <img src={cat.img} alt={cat.name} loading="lazy" />
@@ -164,7 +164,7 @@ export default function Home() {
               { icon: '🔥', title: 'Tendances TikTok', text: 'Produits viraux sélectionnés chaque semaine.' },
               { icon: '💬', title: 'Support 7j/7', text: 'Réponse garantie en moins de 12h.' },
             ].map((t, i) => (
-              <div key={i} className={`trust-item anim-fade-up anim-d${i + 1}`}>
+              <div key={i} className="trust-item reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
                 <div className="trust-icon-wrap">{t.icon}</div>
                 <h3>{t.title}</h3>
                 <p>{t.text}</p>
