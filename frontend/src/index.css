@@ -210,11 +210,10 @@ label {
 .announce-bar {
   background: var(--bg-dark);
   color: white;
-  text-align: center;
-  padding: 10px 20px;
   font-size: 12.5px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
+  overflow: hidden;
 }
 .announce-bar a { color: var(--accent); text-decoration: underline; }
 

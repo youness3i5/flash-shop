@@ -42,9 +42,17 @@ export default function Help() {
   return (
     <div className="help-page">
       <div className="help-hero">
-        <div className="container">
-          <h1>Centre d'aide 💬</h1>
-          <p>Trouve la réponse à ta question ou contacte-nous directement.</p>
+        <div className="container help-hero-inner">
+          <div>
+            <div className="help-eyebrow">Support</div>
+            <h1 className="anim-fade-up">Centre d'aide 💬</h1>
+            <p className="anim-fade-up anim-d1">Trouve la réponse à ta question ou contacte-nous directement. On répond sous 12h.</p>
+          </div>
+          <div className="help-hero-trust anim-scale-in anim-d2">
+            <div className="help-trust-item"><span>⚡</span>Réponse en 12h</div>
+            <div className="help-trust-item"><span>🔒</span>Paiement sécurisé</div>
+            <div className="help-trust-item"><span>🔄</span>Retours 30 jours</div>
+          </div>
         </div>
       </div>
 
@@ -122,12 +130,44 @@ export default function Help() {
       <style>{`
         .help-page { padding-bottom: 80px; }
         .help-hero {
-          background: linear-gradient(135deg, var(--bg-gray), white);
-          padding: 60px 0 48px;
-          border-bottom: 1px solid var(--border);
+          background: linear-gradient(160deg, #0d0d0d 0%, #1a1a2e 100%);
+          padding: 64px 0 52px;
+          position: relative;
+          overflow: hidden;
         }
-        .help-hero h1 { font-size: 36px; font-weight: 900; margin-bottom: 10px; }
-        .help-hero p { color: var(--text-muted); font-size: 16px; }
+        .help-hero::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: radial-gradient(ellipse 600px 400px at 80% 50%, rgba(0,201,177,0.1), transparent);
+          pointer-events: none;
+        }
+        .help-hero-inner {
+          display: flex; align-items: center;
+          justify-content: space-between; gap: 40px;
+          position: relative; z-index: 1;
+          flex-wrap: wrap;
+        }
+        .help-eyebrow {
+          font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+          text-transform: uppercase; color: var(--accent);
+          margin-bottom: 12px;
+        }
+        .help-hero h1 {
+          font-size: clamp(28px, 4vw, 46px); font-weight: 900;
+          margin-bottom: 12px; color: white; letter-spacing: -1px;
+        }
+        .help-hero p { color: rgba(255,255,255,0.6); font-size: 15px; max-width: 420px; line-height: 1.7; }
+        .help-hero-trust {
+          display: flex; flex-direction: column; gap: 12px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: var(--radius); padding: 20px 24px;
+        }
+        .help-trust-item {
+          display: flex; align-items: center; gap: 10px;
+          font-size: 13.5px; font-weight: 700; color: white;
+        }
+        .help-trust-item span { font-size: 20px; }
         .help-body { padding-top: 48px; max-width: 760px; }
 
         .contact-cards {

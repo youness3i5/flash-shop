@@ -27,8 +27,24 @@ export default function Header() {
 
   return (
     <>
-      <div className="announce-bar">
-        🔥 Livraison GRATUITE dès 50€ · 🚚 Expédié en 24h · Retours 30 jours
+      <div className="announce-bar" aria-label="Annonces">
+        <div className="announce-ticker">
+          <span>🔥 Livraison GRATUITE dès 50€</span>
+          <span className="tick-sep">·</span>
+          <span>🚚 Expédié en 24h</span>
+          <span className="tick-sep">·</span>
+          <span>🔄 Retours 30 jours</span>
+          <span className="tick-sep">·</span>
+          <span>💳 Paiement 100% sécurisé</span>
+          <span className="tick-sep">·</span>
+          <span>🔥 Livraison GRATUITE dès 50€</span>
+          <span className="tick-sep">·</span>
+          <span>🚚 Expédié en 24h</span>
+          <span className="tick-sep">·</span>
+          <span>🔄 Retours 30 jours</span>
+          <span className="tick-sep">·</span>
+          <span>💳 Paiement 100% sécurisé</span>
+        </div>
       </div>
 
       <header className={`header${scrolled ? ' scrolled' : ''}`}>
@@ -189,6 +205,20 @@ export default function Header() {
         .cart-btn:hover { background: var(--bg-gray); }
         @keyframes cartBounce { 0%,100%{transform:scale(1)} 30%{transform:scale(1.3)} 60%{transform:scale(0.9)} }
         .cart-bounce { animation: cartBounce 0.45s cubic-bezier(0.34,1.56,0.64,1); }
+
+        .announce-bar { overflow: hidden; padding: 0 !important; }
+        .announce-ticker {
+          display: flex; gap: 28px; align-items: center;
+          white-space: nowrap; padding: 10px 20px;
+          animation: tickerScroll 24s linear infinite;
+          width: max-content;
+        }
+        @keyframes tickerScroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .tick-sep { opacity: 0.35; }
+
         .cart-btn .badge {
           position: absolute;
           top: 1px;
