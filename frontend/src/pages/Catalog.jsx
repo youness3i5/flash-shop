@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard.jsx';
+import { SkeletonProductGrid } from '../components/Skeleton.jsx';
 import { api } from '../api.js';
 
 const CATEGORIES = [
@@ -10,11 +11,18 @@ const CATEGORIES = [
   { name: 'Maison', emoji: '🏠' },
 ];
 
+const SORTS = [
+  { label: 'Par défaut', value: '' },
+  { label: 'Prix croissant', value: 'price_asc' },
+  { label: 'Prix décroissant', value: 'price_desc' },
+];
+
 export default function Catalog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sort, setSort] = useState('');
 
   const categoryParam = searchParams.get('category') || '';
   const searchParam = searchParams.get('search') || '';
@@ -26,10 +34,15 @@ export default function Catalog() {
     if (categoryParam) params.category = categoryParam;
     if (searchParam) params.search = searchParam;
     api.getProducts(params)
-      .then(setProducts)
+      .then(data => {
+        let sorted = [...data];
+        if (sort === 'price_asc') sorted.sort((a, b) => a.price - b.price);
+        if (sort === 'price_desc') sorted.sort((a, b) => b.price - a.price);
+        setProducts(sorted);
+      })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
-  }, [categoryParam, searchParam]);
+  }, [categoryParam, searchParam, sort]);
 
   function handleSearch(e) {
     e.preventDefault();
@@ -46,16 +59,20 @@ export default function Catalog() {
     setSearchParams(p);
   }
 
+  const activeCat = CATEGORIES.find(c => c.name === categoryParam);
+
   return (
     <div className="catalog-page">
-      <div className="catalog-top">
+      <div className="catalog-hero">
         <div className="container">
-          <h1 className="catalog-title">
-            {categoryParam ? (
-              <>{CATEGORIES.find(c => c.name === categoryParam)?.emoji} {categoryParam}</>
-            ) : 'Tous les produits ✨'}
+          <h1 className="catalog-title anim-fade-up">
+            {activeCat ? `${activeCat.emoji} ${categoryParam}` : '✨ Tous les produits'}
           </h1>
-          <form className="search-form" onSubmit={handleSearch}>
+          <p className="catalog-sub anim-fade-up anim-d1">
+            {loading ? '…' : `${products.length} produit${products.length > 1 ? 's' : ''} disponible${products.length > 1 ? 's' : ''}`}
+          </p>
+
+          <form className="search-form anim-fade-up anim-d2" onSubmit={handleSearch}>
             <div className="search-wrap">
               <svg className="si" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -74,87 +91,102 @@ export default function Catalog() {
       </div>
 
       <div className="container catalog-body">
-        <div className="filters">
-          <button
-            className={`filter-btn${!categoryParam ? ' active' : ''}`}
-            onClick={() => { const p = new URLSearchParams(searchParams); p.delete('category'); setSearchParams(p); }}
-          >
-            Tous
-          </button>
-          {CATEGORIES.map(cat => (
+        <div className="catalog-controls">
+          <div className="filters">
             <button
-              key={cat.name}
-              className={`filter-btn${categoryParam === cat.name ? ' active' : ''}`}
-              onClick={() => handleCategory(cat.name)}
+              className={`filter-btn${!categoryParam ? ' active' : ''}`}
+              onClick={() => { const p = new URLSearchParams(searchParams); p.delete('category'); setSearchParams(p); }}
             >
-              {cat.emoji} {cat.name}
+              Tous
             </button>
-          ))}
-          {!loading && (
-            <span className="result-count">
-              {products.length} produit{products.length > 1 ? 's' : ''}
-            </span>
-          )}
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat.name}
+                className={`filter-btn${categoryParam === cat.name ? ' active' : ''}`}
+                onClick={() => handleCategory(cat.name)}
+              >
+                {cat.emoji} {cat.name}
+              </button>
+            ))}
+          </div>
+
+          <div className="sort-wrap">
+            <select
+              className="sort-select"
+              value={sort}
+              onChange={e => setSort(e.target.value)}
+            >
+              {SORTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+            </select>
+          </div>
         </div>
 
-        {loading && <div className="spinner" />}
+        {loading && <SkeletonProductGrid count={8} />}
         {error && <p className="error-msg">{error}</p>}
         {!loading && !error && products.length === 0 && (
-          <div className="empty-state">
+          <div className="empty-state anim-scale-in">
             <div className="empty-icon">🔍</div>
             <h3>Aucun produit trouvé</h3>
             <p>Essaie une autre catégorie ou modifie ta recherche.</p>
           </div>
         )}
         {!loading && !error && products.length > 0 && (
-          <div className="products-grid">
-            {products.map(p => <ProductCard key={p.id} product={p} />)}
+          <div className="products-grid anim-fade-in">
+            {products.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
           </div>
         )}
       </div>
 
       <style>{`
-        .catalog-top {
+        .catalog-page { padding-bottom: 80px; }
+        .catalog-hero {
           background: var(--bg-gray);
           border-bottom: 1px solid var(--border);
-          padding: 36px 0 28px;
+          padding: 40px 0 32px;
         }
         .catalog-title {
-          font-size: 30px;
+          font-size: 32px;
           font-weight: 900;
-          margin-bottom: 20px;
           letter-spacing: -0.5px;
+          margin-bottom: 4px;
+        }
+        .catalog-sub {
+          color: var(--text-muted);
+          font-size: 14px;
+          font-weight: 500;
+          margin-bottom: 24px;
         }
         .search-form { display: flex; gap: 10px; max-width: 560px; }
         .search-wrap { position: relative; flex: 1; }
         .si {
           position: absolute;
-          left: 14px;
-          top: 50%;
+          left: 14px; top: 50%;
           transform: translateY(-50%);
           color: var(--text-muted);
           pointer-events: none;
         }
         .search-input { padding-left: 42px; }
 
-        .catalog-body { padding-top: 32px; padding-bottom: 80px; }
+        .catalog-body { padding-top: 32px; }
 
-        .filters {
+        .catalog-controls {
           display: flex;
-          gap: 8px;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
           margin-bottom: 32px;
           flex-wrap: wrap;
-          align-items: center;
         }
+        .filters { display: flex; gap: 8px; flex-wrap: wrap; }
         .filter-btn {
-          background: var(--bg-gray);
+          background: white;
           border: 1.5px solid var(--border);
           border-radius: 20px;
           padding: 8px 18px;
           font-size: 13px;
           font-weight: 700;
           cursor: pointer;
-          transition: all var(--transition);
+          transition: all 0.2s;
           color: var(--text-muted);
           font-family: 'Poppins', sans-serif;
         }
@@ -165,11 +197,17 @@ export default function Catalog() {
           color: white;
           box-shadow: var(--shadow-primary);
         }
-        .result-count {
-          margin-left: auto;
+        .sort-select {
+          width: auto;
+          padding: 9px 36px 9px 14px;
           font-size: 13px;
-          color: var(--text-muted);
           font-weight: 600;
+          border-radius: 20px;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 12px center;
+          appearance: none;
+          cursor: pointer;
         }
 
         .empty-state {
@@ -177,13 +215,13 @@ export default function Catalog() {
           padding: 100px 0 60px;
           color: var(--text-muted);
         }
-        .empty-icon { font-size: 56px; margin-bottom: 16px; }
-        .empty-state h3 { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .empty-icon { font-size: 60px; margin-bottom: 20px; }
+        .empty-state h3 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
         .empty-state p { font-size: 14px; }
 
-        @media (max-width: 600px) {
+        @media (max-width: 640px) {
           .search-form { flex-direction: column; }
-          .result-count { display: none; }
+          .catalog-controls { flex-direction: column; align-items: flex-start; }
         }
       `}</style>
     </div>

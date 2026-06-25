@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { api } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
+import { SkeletonProductPage } from '../components/Skeleton.jsx';
 
 const BADGE_COLORS = {
   'Viral TikTok': '#FF3B5C',
@@ -34,7 +35,7 @@ export default function Product() {
     setTimeout(() => setAdded(false), 2500);
   }
 
-  if (loading) return <div className="spinner" style={{ marginTop: 100 }} />;
+  if (loading) return <div className="container"><SkeletonProductPage /></div>;
   if (error || !product) return (
     <div className="container" style={{ padding: '80px 16px', textAlign: 'center' }}>
       <p style={{ fontSize: 48, marginBottom: 16 }}>😕</p>
@@ -76,7 +77,7 @@ export default function Product() {
             )}
           </div>
 
-          <div className="product-info">
+          <div className="product-info anim-fade-up">
             <span className="product-cat-tag">{product.category}</span>
             <h1 className="product-name">{product.name}</h1>
 

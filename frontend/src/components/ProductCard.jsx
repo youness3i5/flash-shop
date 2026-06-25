@@ -14,9 +14,11 @@ const BADGE_COLORS = {
   'RoomTok':      { bg: '#6366F1', color: '#fff' },
   'FitnessTok':   { bg: '#10B981', color: '#fff' },
   'SleepTok':     { bg: '#6366F1', color: '#fff' },
+  'Éco-friendly': { bg: '#059669', color: '#fff' },
+  'IPX7':         { bg: '#3B82F6', color: '#fff' },
 };
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, index = 0 }) {
   const { addItem } = useCart();
   const [adding, setAdding] = useState(false);
 
@@ -33,10 +35,14 @@ export default function ProductCard({ product }) {
     : { bg: '#374151', color: '#fff' };
 
   const stars = 4 + Math.floor(Math.abs(product.id?.charCodeAt(1) - 50) % 2);
-  const reviews = 18 + (parseInt(product.id?.replace('p','') || '1') * 7);
+  const reviews = 18 + (parseInt(product.id?.replace('p', '') || '1') * 7);
+  const delay = Math.min(index, 7) * 0.06;
 
   return (
-    <article className="product-card">
+    <article
+      className="product-card anim-fade-up"
+      style={{ animationDelay: `${delay}s` }}
+    >
       <Link to={`/produit/${product.id}`} className="card-img-link">
         <img
           src={product.imageUrl}
@@ -51,8 +57,8 @@ export default function ProductCard({ product }) {
           </span>
         )}
         <div className="card-overlay">
-          <button className="quick-add" onClick={handleAdd}>
-            {adding ? '✓ Ajouté !' : '+ Ajouter'}
+          <button className={`quick-add${adding ? ' quick-added' : ''}`} onClick={handleAdd}>
+            {adding ? '✓ Ajouté !' : '🛒 Ajouter au panier'}
           </button>
         </div>
       </Link>
@@ -61,7 +67,8 @@ export default function ProductCard({ product }) {
         <span className="card-category">{product.category}</span>
         <Link to={`/produit/${product.id}`} className="card-name">{product.name}</Link>
         <div className="card-stars">
-          {'★'.repeat(stars)}{'☆'.repeat(5 - stars)}
+          <span className="stars-filled">{'★'.repeat(stars)}</span>
+          <span className="stars-empty">{'☆'.repeat(5 - stars)}</span>
           <span className="card-reviews">({reviews})</span>
         </div>
         <div className="card-footer">
@@ -70,10 +77,11 @@ export default function ProductCard({ product }) {
             className={`add-btn${adding ? ' added' : ''}`}
             onClick={handleAdd}
             aria-label="Ajouter au panier"
+            title="Ajouter au panier"
           >
             {adding
-              ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6 9 17l-5-5"/></svg>
-              : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6 9 17l-5-5"/></svg>
+              : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
             }
           </button>
         </div>
@@ -85,134 +93,103 @@ export default function ProductCard({ product }) {
           border-radius: var(--radius);
           overflow: hidden;
           border: 1px solid var(--border);
-          transition: transform 0.25s ease, box-shadow 0.25s ease;
-          display: flex;
-          flex-direction: column;
+          transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease;
+          display: flex; flex-direction: column;
           position: relative;
         }
         .product-card:hover {
-          transform: translateY(-6px);
+          transform: translateY(-8px) scale(1.01);
           box-shadow: var(--shadow-hover);
           border-color: transparent;
         }
+
         .card-img-link {
-          position: relative;
-          display: block;
-          overflow: hidden;
-          aspect-ratio: 1;
+          position: relative; display: block;
+          overflow: hidden; aspect-ratio: 1;
           background: var(--bg-gray);
         }
         .card-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.4s ease;
+          width: 100%; height: 100%; object-fit: cover;
+          transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
         }
-        .product-card:hover .card-img { transform: scale(1.07); }
+        .product-card:hover .card-img { transform: scale(1.09); }
+
         .card-badge {
-          position: absolute;
-          top: 10px;
-          left: 10px;
-          border-radius: 20px;
-          padding: 4px 10px;
-          font-size: 10.5px;
-          font-weight: 800;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-          z-index: 1;
+          position: absolute; top: 10px; left: 10px;
+          border-radius: 20px; padding: 4px 10px;
+          font-size: 10px; font-weight: 800;
+          letter-spacing: 0.05em; text-transform: uppercase;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 1;
         }
+
         .card-overlay {
-          position: absolute;
-          inset: 0;
-          background: rgba(0,0,0,0.35);
-          display: flex;
-          align-items: flex-end;
-          justify-content: center;
-          padding-bottom: 14px;
-          opacity: 0;
-          transition: opacity 0.25s ease;
+          position: absolute; inset: 0;
+          background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 60%);
+          display: flex; align-items: flex-end;
+          justify-content: center; padding-bottom: 14px;
+          opacity: 0; transition: opacity 0.3s ease;
         }
         .product-card:hover .card-overlay { opacity: 1; }
+
         .quick-add {
-          background: white;
-          color: var(--text);
-          border: none;
-          border-radius: 20px;
-          padding: 8px 20px;
-          font-size: 13px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.15s;
+          background: white; color: var(--text);
+          border: none; border-radius: 20px;
+          padding: 9px 20px; font-size: 12.5px; font-weight: 700;
+          cursor: pointer; transition: all 0.2s;
           font-family: 'Poppins', sans-serif;
+          transform: translateY(6px);
+          opacity: 0;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+        .product-card:hover .quick-add {
+          transform: translateY(0); opacity: 1;
+          transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
         }
         .quick-add:hover { background: var(--primary); color: white; }
+        .quick-add.quick-added { background: #10B981; color: white; }
+
         .card-body {
           padding: 14px 16px 16px;
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
+          display: flex; flex-direction: column; gap: 5px;
           flex: 1;
         }
         .card-category {
-          font-size: 11px;
-          font-weight: 700;
-          color: var(--text-muted);
-          text-transform: uppercase;
+          font-size: 10.5px; font-weight: 700;
+          color: var(--text-muted); text-transform: uppercase;
           letter-spacing: 0.08em;
         }
         .card-name {
-          font-size: 14px;
-          font-weight: 700;
-          color: var(--text);
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          line-height: 1.4;
-          transition: color var(--transition);
+          font-size: 13.5px; font-weight: 700; color: var(--text);
+          display: -webkit-box; -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical; overflow: hidden;
+          line-height: 1.45; transition: color var(--transition);
         }
         .card-name:hover { color: var(--primary); }
-        .card-stars {
-          font-size: 12px;
-          color: #F59E0B;
-          letter-spacing: 1px;
-        }
+
+        .card-stars { display: flex; align-items: center; gap: 2px; }
+        .stars-filled { font-size: 12px; color: #F59E0B; letter-spacing: 1px; }
+        .stars-empty  { font-size: 12px; color: #D1D5DB; letter-spacing: 1px; }
         .card-reviews {
-          color: var(--text-light);
-          font-size: 11px;
-          margin-left: 4px;
-          letter-spacing: 0;
-          font-weight: 500;
+          color: var(--text-light); font-size: 11px;
+          margin-left: 4px; font-weight: 500;
         }
+
         .card-footer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: 4px;
+          display: flex; align-items: center;
+          justify-content: space-between; margin-top: 4px;
         }
-        .card-price {
-          font-size: 18px;
-          font-weight: 900;
-          color: var(--primary);
-        }
+        .card-price { font-size: 18px; font-weight: 900; color: var(--primary); }
+
         .add-btn {
-          background: var(--gradient);
-          color: white;
-          border: none;
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all var(--transition);
-          flex-shrink: 0;
-          box-shadow: 0 4px 12px rgba(255,59,92,0.3);
+          background: var(--gradient); color: white;
+          border: none; width: 36px; height: 36px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+          flex-shrink: 0; box-shadow: 0 4px 12px rgba(255,59,92,0.3);
         }
-        .add-btn:hover { transform: scale(1.12); box-shadow: var(--shadow-primary); }
+        .add-btn:hover { transform: scale(1.15); box-shadow: var(--shadow-primary); }
         .add-btn.added { background: #10B981; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+        .add-btn:active { transform: scale(0.95); }
       `}</style>
     </article>
   );
