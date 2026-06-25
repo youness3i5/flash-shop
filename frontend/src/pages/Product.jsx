@@ -4,6 +4,7 @@ import { api } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
 import { SkeletonProductPage } from '../components/Skeleton.jsx';
 import { useToast } from '../components/Toast.jsx';
+import ProductCard from '../components/ProductCard.jsx';
 
 const BADGE_COLORS = {
   'Viral TikTok': '#FF3B5C',
@@ -21,12 +22,20 @@ export default function Product() {
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [related, setRelated] = useState([]);
   const { addItem } = useCart();
   const toast = useToast();
 
   useEffect(() => {
+    setLoading(true);
+    setRelated([]);
     api.getProduct(id)
-      .then(setProduct)
+      .then(p => {
+        setProduct(p);
+        api.getProducts({ category: p.category })
+          .then(all => setRelated(all.filter(x => x.id !== id).slice(0, 4)))
+          .catch(() => {});
+      })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
   }, [id]);
@@ -140,6 +149,20 @@ export default function Product() {
             </div>
           </div>
         </div>
+
+        {related.length > 0 && (
+          <div className="related-section">
+            <div className="related-header">
+              <h2 className="related-title">Vous aimerez aussi</h2>
+              <Link to={`/catalogue?category=${product.category}`} className="related-link">
+                Voir tout {product.category} →
+              </Link>
+            </div>
+            <div className="products-grid related-grid">
+              {related.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+            </div>
+          </div>
+        )}
       </div>
 
       <style>{`
@@ -294,6 +317,16 @@ export default function Product() {
           border: 1px solid var(--border);
           color: var(--text-muted);
         }
+
+        .related-section { margin-top: 60px; padding-top: 48px; border-top: 1px solid var(--border); }
+        .related-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+        .related-title { font-size: 22px; font-weight: 900; }
+        .related-link {
+          color: var(--primary); font-weight: 700; font-size: 13px;
+          padding: 8px 16px; border: 1.5px solid var(--primary);
+          border-radius: 20px; transition: all 0.2s;
+        }
+        .related-link:hover { background: var(--primary); color: white; }
 
         @media (max-width: 800px) {
           .product-layout { grid-template-columns: 1fr; gap: 28px; }

@@ -65,12 +65,14 @@ export default function Catalog() {
     <div className="catalog-page">
       <div className="catalog-hero">
         <div className="container">
-          <h1 className="catalog-title anim-fade-up">
-            {activeCat ? `${activeCat.emoji} ${categoryParam}` : '✨ Tous les produits'}
-          </h1>
-          <p className="catalog-sub anim-fade-up anim-d1">
-            {loading ? '…' : `${products.length} produit${products.length > 1 ? 's' : ''} disponible${products.length > 1 ? 's' : ''}`}
-          </p>
+          <div className="cat-hero-text">
+            <h1 className="catalog-title anim-fade-up">
+              {activeCat ? `${activeCat.emoji} ${categoryParam}` : '✨ Tous les produits'}
+            </h1>
+            <p className="catalog-sub anim-fade-up anim-d1">
+              {loading ? '…' : `${products.length} produit${products.length > 1 ? 's' : ''} tendance`}
+            </p>
+          </div>
 
           <form className="search-form anim-fade-up anim-d2" onSubmit={handleSearch}>
             <div className="search-wrap">
@@ -82,7 +84,7 @@ export default function Catalog() {
                 placeholder="Rechercher un produit..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="search-input"
+                className="search-input cat-search-input"
               />
             </div>
             <button type="submit" className="btn btn-primary">Rechercher</button>
@@ -140,21 +142,29 @@ export default function Catalog() {
       <style>{`
         .catalog-page { padding-bottom: 80px; }
         .catalog-hero {
-          background: var(--bg-gray);
-          border-bottom: 1px solid var(--border);
-          padding: 40px 0 32px;
+          background: linear-gradient(160deg, #0d0d0d 0%, #1a1a2e 100%);
+          padding: 48px 0 40px;
+          position: relative; overflow: hidden;
         }
+        .catalog-hero::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: radial-gradient(ellipse 700px 400px at 70% 50%, rgba(255,59,92,0.08), transparent);
+          pointer-events: none;
+        }
+        .catalog-hero .container { position: relative; z-index: 1; }
+        .cat-hero-text { margin-bottom: 24px; }
         .catalog-title {
-          font-size: 32px;
+          font-size: clamp(26px, 4vw, 40px);
           font-weight: 900;
           letter-spacing: -0.5px;
-          margin-bottom: 4px;
+          margin-bottom: 6px;
+          color: white;
         }
         .catalog-sub {
-          color: var(--text-muted);
+          color: rgba(255,255,255,0.5);
           font-size: 14px;
           font-weight: 500;
-          margin-bottom: 24px;
         }
         .search-form { display: flex; gap: 10px; max-width: 560px; }
         .search-wrap { position: relative; flex: 1; }
@@ -165,6 +175,7 @@ export default function Catalog() {
           color: var(--text-muted);
           pointer-events: none;
         }
+        .cat-search-input { background: rgba(255,255,255,0.95); }
         .search-input { padding-left: 42px; }
 
         .catalog-body { padding-top: 32px; }
