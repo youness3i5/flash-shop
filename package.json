@@ -1,0 +1,11 @@
+{
+  "name": "flash-shop",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && node server.js",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm install --include=dev && npm run build && cd .. && node scripts/copy-dist.js",
+    "start": "cd backend && node server.js"
+  }
+}

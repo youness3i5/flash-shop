@@ -1,0 +1,74 @@
+[
+  {
+    "id": "p1",
+    "name": "Parasol de plage XXL",
+    "description": "Parasol de plage extra-large avec protection UV50+. Idéal pour la famille, facile à installer avec sa tige télescopique. Diamètre 2,4m, inclinable à 360°.",
+    "price": 24.99,
+    "category": "Été",
+    "imageUrl": "https://placehold.co/400x400/FF4D4D/white?text=Parasol+XXL",
+    "sourceUrl": "",
+    "stock": 50,
+    "featured": true,
+    "createdAt": "2026-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "p2",
+    "name": "Ventilateur portable USB",
+    "description": "Mini ventilateur portable rechargeable USB-C. 3 vitesses, silencieux, autonomie jusqu'à 8h. Parfait pour le bureau, les voyages ou la plage.",
+    "price": 12.99,
+    "category": "Été",
+    "imageUrl": "https://placehold.co/400x400/FF6B35/white?text=Ventilateur+USB",
+    "sourceUrl": "",
+    "stock": 100,
+    "featured": true,
+    "createdAt": "2026-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "p3",
+    "name": "Lunettes de soleil polarisées",
+    "description": "Lunettes de soleil tendance avec verres polarisés UV400. Protection maximale, monture légère en TR90, style oversize très populaire sur TikTok.",
+    "price": 9.99,
+    "category": "Mode",
+    "imageUrl": "https://placehold.co/400x400/9B59B6/white?text=Lunettes+Soleil",
+    "sourceUrl": "",
+    "stock": 80,
+    "featured": true,
+    "createdAt": "2026-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "p4",
+    "name": "Écouteurs sans fil TWS",
+    "description": "Écouteurs true wireless avec réduction de bruit active. Autonomie 6h + 24h avec le boîtier, connexion Bluetooth 5.3, son cristallin. Tendance #TechTok.",
+    "price": 19.99,
+    "category": "Audio",
+    "imageUrl": "https://placehold.co/400x400/3498DB/white?text=Ecouteurs+TWS",
+    "sourceUrl": "",
+    "stock": 60,
+    "featured": true,
+    "createdAt": "2026-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "p5",
+    "name": "Débardeur oversize tendance",
+    "description": "Débardeur oversize 100% coton, coupe relax ultra tendance. Viral sur TikTok, disponible en plusieurs coloris. Taille unique S-XL.",
+    "price": 14.99,
+    "category": "Mode",
+    "imageUrl": "https://placehold.co/400x400/E74C3C/white?text=Debardeur+Oversize",
+    "sourceUrl": "",
+    "stock": 120,
+    "featured": false,
+    "createdAt": "2026-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "p6",
+    "name": "Bouteille isotherme 1L",
+    "description": "Bouteille isotherme en acier inoxydable 1 litre. Garde les boissons froides 24h, chaudes 12h. Sans BPA, couvercle étanche à clip. Design minimaliste.",
+    "price": 16.99,
+    "category": "Maison",
+    "imageUrl": "https://placehold.co/400x400/27AE60/white?text=Bouteille+1L",
+    "sourceUrl": "",
+    "stock": 75,
+    "featured": false,
+    "createdAt": "2026-06-01T00:00:00.000Z"
+  }
+]
