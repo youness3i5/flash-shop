@@ -3,7 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard.jsx';
 import { api } from '../api.js';
 
-const CATEGORIES = ['Été', 'Audio', 'Mode', 'Maison'];
+const CATEGORIES = [
+  { name: 'Été', emoji: '☀️' },
+  { name: 'Mode', emoji: '👕' },
+  { name: 'Audio', emoji: '🎧' },
+  { name: 'Maison', emoji: '🏠' },
+];
 
 export default function Catalog() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,7 +25,6 @@ export default function Catalog() {
     const params = {};
     if (categoryParam) params.category = categoryParam;
     if (searchParam) params.search = searchParam;
-
     api.getProducts(params)
       .then(setProducts)
       .catch(e => setError(e.message))
@@ -44,15 +48,16 @@ export default function Catalog() {
 
   return (
     <div className="catalog-page">
-      <div className="container">
-        <div className="catalog-header">
+      <div className="catalog-top">
+        <div className="container">
           <h1 className="catalog-title">
-            {categoryParam ? `${categoryParam}` : 'Tous les produits'}
-            {!loading && <span className="count"> ({products.length})</span>}
+            {categoryParam ? (
+              <>{CATEGORIES.find(c => c.name === categoryParam)?.emoji} {categoryParam}</>
+            ) : 'Tous les produits ✨'}
           </h1>
           <form className="search-form" onSubmit={handleSearch}>
             <div className="search-wrap">
-              <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg className="si" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
               </svg>
               <input
@@ -66,30 +71,39 @@ export default function Catalog() {
             <button type="submit" className="btn btn-primary">Rechercher</button>
           </form>
         </div>
+      </div>
 
+      <div className="container catalog-body">
         <div className="filters">
           <button
-            className={`filter-btn ${!categoryParam ? 'active' : ''}`}
+            className={`filter-btn${!categoryParam ? ' active' : ''}`}
             onClick={() => { const p = new URLSearchParams(searchParams); p.delete('category'); setSearchParams(p); }}
           >
             Tous
           </button>
           {CATEGORIES.map(cat => (
             <button
-              key={cat}
-              className={`filter-btn ${categoryParam === cat ? 'active' : ''}`}
-              onClick={() => handleCategory(cat)}
+              key={cat.name}
+              className={`filter-btn${categoryParam === cat.name ? ' active' : ''}`}
+              onClick={() => handleCategory(cat.name)}
             >
-              {cat}
+              {cat.emoji} {cat.name}
             </button>
           ))}
+          {!loading && (
+            <span className="result-count">
+              {products.length} produit{products.length > 1 ? 's' : ''}
+            </span>
+          )}
         </div>
 
         {loading && <div className="spinner" />}
         {error && <p className="error-msg">{error}</p>}
         {!loading && !error && products.length === 0 && (
           <div className="empty-state">
-            <p>Aucun produit trouvé.</p>
+            <div className="empty-icon">🔍</div>
+            <h3>Aucun produit trouvé</h3>
+            <p>Essaie une autre catégorie ou modifie ta recherche.</p>
           </div>
         )}
         {!loading && !error && products.length > 0 && (
@@ -100,81 +114,76 @@ export default function Catalog() {
       </div>
 
       <style>{`
-        .catalog-page { padding: 40px 0 80px; }
-        .catalog-header {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 16px;
-          margin-bottom: 24px;
-          flex-wrap: wrap;
+        .catalog-top {
+          background: var(--bg-gray);
+          border-bottom: 1px solid var(--border);
+          padding: 36px 0 28px;
         }
         .catalog-title {
-          font-size: 28px;
-          font-weight: 800;
+          font-size: 30px;
+          font-weight: 900;
+          margin-bottom: 20px;
+          letter-spacing: -0.5px;
         }
-        .count {
-          font-size: 18px;
-          color: var(--text-muted);
-          font-weight: 400;
-        }
-        .search-form {
-          display: flex;
-          gap: 8px;
-          flex: 0 0 auto;
-        }
-        .search-wrap {
-          position: relative;
-        }
-        .search-icon {
+        .search-form { display: flex; gap: 10px; max-width: 560px; }
+        .search-wrap { position: relative; flex: 1; }
+        .si {
           position: absolute;
-          left: 12px;
+          left: 14px;
           top: 50%;
           transform: translateY(-50%);
           color: var(--text-muted);
           pointer-events: none;
         }
-        .search-input {
-          padding-left: 36px;
-          width: 240px;
-        }
+        .search-input { padding-left: 42px; }
+
+        .catalog-body { padding-top: 32px; padding-bottom: 80px; }
+
         .filters {
           display: flex;
           gap: 8px;
-          margin-bottom: 28px;
+          margin-bottom: 32px;
           flex-wrap: wrap;
+          align-items: center;
         }
         .filter-btn {
           background: var(--bg-gray);
           border: 1.5px solid var(--border);
           border-radius: 20px;
-          padding: 7px 16px;
+          padding: 8px 18px;
           font-size: 13px;
-          font-weight: 600;
+          font-weight: 700;
           cursor: pointer;
           transition: all var(--transition);
           color: var(--text-muted);
+          font-family: 'Poppins', sans-serif;
         }
-        .filter-btn:hover, .filter-btn.active {
-          background: var(--primary);
-          border-color: var(--primary);
+        .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-btn.active {
+          background: var(--gradient);
+          border-color: transparent;
           color: white;
+          box-shadow: var(--shadow-primary);
         }
-        .products-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-          gap: 20px;
+        .result-count {
+          margin-left: auto;
+          font-size: 13px;
+          color: var(--text-muted);
+          font-weight: 600;
         }
+
         .empty-state {
           text-align: center;
-          padding: 80px 0;
+          padding: 100px 0 60px;
           color: var(--text-muted);
-          font-size: 16px;
         }
+        .empty-icon { font-size: 56px; margin-bottom: 16px; }
+        .empty-state h3 { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .empty-state p { font-size: 14px; }
+
         @media (max-width: 600px) {
-          .catalog-header { flex-direction: column; }
-          .search-form { width: 100%; }
-          .search-input { width: 100%; }
+          .search-form { flex-direction: column; }
+          .result-count { display: none; }
         }
       `}</style>
     </div>
