@@ -6,6 +6,6 @@
     "dev:backend": "cd backend && node server.js",
     "dev:frontend": "cd frontend && npm run dev",
     "build": "cd frontend && npm install --include=dev && npm run build && cd .. && node scripts/copy-dist.js",
-    "start": "cd backend && node server.js"
+    "start": "cd backend && npm install --omit=dev && node server.js"
   }
 }
