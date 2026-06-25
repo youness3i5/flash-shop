@@ -6,7 +6,16 @@ export default function Header() {
   const { totalCount, setIsOpen } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [cartBounce, setCartBounce] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    if (totalCount > 0) {
+      setCartBounce(true);
+      const t = setTimeout(() => setCartBounce(false), 500);
+      return () => clearTimeout(t);
+    }
+  }, [totalCount]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -46,7 +55,7 @@ export default function Header() {
             </Link>
 
             <button
-              className="cart-btn"
+              className={`cart-btn${cartBounce ? ' cart-bounce' : ''}`}
               onClick={() => setIsOpen(true)}
               aria-label={`Panier (${totalCount} articles)`}
             >
@@ -178,6 +187,8 @@ export default function Header() {
           transition: background var(--transition);
         }
         .cart-btn:hover { background: var(--bg-gray); }
+        @keyframes cartBounce { 0%,100%{transform:scale(1)} 30%{transform:scale(1.3)} 60%{transform:scale(0.9)} }
+        .cart-bounce { animation: cartBounce 0.45s cubic-bezier(0.34,1.56,0.64,1); }
         .cart-btn .badge {
           position: absolute;
           top: 1px;

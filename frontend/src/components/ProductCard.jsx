@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext.jsx';
+import { useToast } from './Toast.jsx';
 
 const BADGE_COLORS = {
   'Viral TikTok': { bg: '#FF3B5C', color: '#fff' },
@@ -20,6 +21,7 @@ const BADGE_COLORS = {
 
 export default function ProductCard({ product, index = 0 }) {
   const { addItem } = useCart();
+  const toast = useToast();
   const [adding, setAdding] = useState(false);
 
   function handleAdd(e) {
@@ -27,6 +29,7 @@ export default function ProductCard({ product, index = 0 }) {
     e.stopPropagation();
     addItem(product, 1);
     setAdding(true);
+    toast?.(`✓ ${product.name.slice(0, 28)}${product.name.length > 28 ? '…' : ''} ajouté au panier`);
     setTimeout(() => setAdding(false), 1500);
   }
 

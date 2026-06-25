@@ -31,7 +31,6 @@ export function CartProvider({ children }) {
       }
       return [...prev, { id: product.id, name: product.name, price: product.price, imageUrl: product.imageUrl, quantity }];
     });
-    setIsOpen(true);
   }
 
   function updateQuantity(id, quantity) {

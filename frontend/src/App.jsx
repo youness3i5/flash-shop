@@ -4,6 +4,7 @@ import { CartProvider } from './context/CartContext.jsx';
 import Header from './components/Header.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import FloatingHelp from './components/FloatingHelp.jsx';
+import ToastContainer from './components/Toast.jsx';
 import Home from './pages/Home.jsx';
 import Catalog from './pages/Catalog.jsx';
 import Product from './pages/Product.jsx';
@@ -93,6 +94,7 @@ export default function App() {
         </main>
         <FloatingHelp />
         <BackToTop />
+        <ToastContainer />
       </CartProvider>
     </BrowserRouter>
   );

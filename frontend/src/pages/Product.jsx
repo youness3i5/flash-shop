@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { api } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
 import { SkeletonProductPage } from '../components/Skeleton.jsx';
+import { useToast } from '../components/Toast.jsx';
 
 const BADGE_COLORS = {
   'Viral TikTok': '#FF3B5C',
@@ -21,6 +22,7 @@ export default function Product() {
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
+  const toast = useToast();
 
   useEffect(() => {
     api.getProduct(id)
@@ -32,6 +34,7 @@ export default function Product() {
   function handleAdd() {
     addItem(product, quantity);
     setAdded(true);
+    toast?.(`✓ ${quantity}× ${product.name.slice(0, 25)}${product.name.length > 25 ? '…' : ''} ajouté`);
     setTimeout(() => setAdded(false), 2500);
   }
 
