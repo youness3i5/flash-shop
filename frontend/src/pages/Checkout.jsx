@@ -280,8 +280,15 @@ export default function Checkout() {
 
         @media (max-width: 820px) {
           .co-layout { grid-template-columns: 1fr; }
-          .co-summary { position: static; }
+          .co-summary { position: static; order: -1; }
           .co-row { grid-template-columns: 1fr; }
+          .co-progress { gap: 4px; }
+          .co-step span { display: none; }
+        }
+        @media (max-width: 480px) {
+          .co-page { padding: 20px 0 80px; }
+          .co-section { padding: 20px 16px; }
+          .submit-btn { font-size: 14px; padding: 15px; }
         }
       `}</style>
     </div>

@@ -216,11 +216,17 @@ export default function Cart() {
         @media (max-width: 800px) {
           .cart-layout { grid-template-columns: 1fr; }
           .cart-summary { position: static; }
+          .cart-title { font-size: 24px; }
         }
         @media (max-width: 480px) {
-          .cart-item { flex-wrap: wrap; }
-          .item-img { width: 72px; height: 72px; }
-          .item-total { width: 100%; text-align: left; }
+          .cart-page { padding: 20px 0 80px; }
+          .cart-item { gap: 12px; padding: 14px; }
+          .item-img { width: 68px; height: 68px; flex-shrink: 0; }
+          .item-name { font-size: 13px; }
+          .item-unit { display: none; }
+          .item-total { font-size: 15px; min-width: 60px; }
+          .item-row { gap: 10px; }
+          .cart-summary { padding: 18px; }
         }
       `}</style>
     </div>

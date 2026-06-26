@@ -20,6 +20,17 @@ function ScrollToTop() {
   return null;
 }
 
+function PageWrapper({ children }) {
+  const { pathname } = useLocation();
+  const [cls, setCls] = useState('page-in');
+  useEffect(() => {
+    setCls('');
+    const t = setTimeout(() => setCls('page-in'), 10);
+    return () => clearTimeout(t);
+  }, [pathname]);
+  return <div className={cls}>{children}</div>;
+}
+
 function ScrollReveal() {
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -81,16 +92,18 @@ export default function App() {
         <Header />
         <CartDrawer />
         <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/catalogue" element={<Catalog />} />
-            <Route path="/produit/:id" element={<Product />} />
-            <Route path="/panier" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/success" element={<Success />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/aide" element={<Help />} />
-          </Routes>
+          <PageWrapper>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/catalogue" element={<Catalog />} />
+              <Route path="/produit/:id" element={<Product />} />
+              <Route path="/panier" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/success" element={<Success />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/aide" element={<Help />} />
+            </Routes>
+          </PageWrapper>
         </main>
         <FloatingHelp />
         <BackToTop />
