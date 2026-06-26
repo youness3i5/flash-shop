@@ -23,6 +23,7 @@ export default function Product() {
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [related, setRelated] = useState([]);
+  const [lightbox, setLightbox] = useState(false);
   const { addItem } = useCart();
   const toast = useToast();
 
@@ -75,7 +76,7 @@ export default function Product() {
         </nav>
 
         <div className="product-layout">
-          <div className="product-img-wrap">
+          <div className="product-img-wrap" onClick={() => setLightbox(true)} title="Agrandir">
             <img
               src={product.imageUrl}
               alt={product.name}
@@ -87,7 +88,25 @@ export default function Product() {
                 {product.badge}
               </span>
             )}
+            <div className="img-zoom-hint">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                <path d="M11 8v6M8 11h6"/>
+              </svg>
+            </div>
           </div>
+
+          {lightbox && (
+            <div className="lightbox-overlay" onClick={() => setLightbox(false)}>
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="lightbox-img"
+                onError={e => { e.target.src = 'https://placehold.co/900x900/f3f4f6/9ca3af?text=Photo'; }}
+              />
+              <button className="lightbox-close" onClick={() => setLightbox(false)}>✕</button>
+            </div>
+          )}
 
           <div className="product-info anim-fade-up">
             <span className="product-cat-tag">{product.category}</span>
@@ -199,7 +218,40 @@ export default function Product() {
           object-fit: cover;
           transition: transform 0.4s ease;
         }
+        .product-img-wrap { cursor: zoom-in; }
         .product-img-wrap:hover .product-img { transform: scale(1.04); }
+        .img-zoom-hint {
+          position: absolute; bottom: 12px; right: 12px;
+          background: rgba(0,0,0,0.55); color: white;
+          border-radius: 8px; padding: 6px 8px;
+          opacity: 0; transition: opacity 0.2s;
+          backdrop-filter: blur(4px);
+        }
+        .product-img-wrap:hover .img-zoom-hint { opacity: 1; }
+
+        .lightbox-overlay {
+          position: fixed; inset: 0; z-index: 9999;
+          background: rgba(0,0,0,0.9);
+          display: flex; align-items: center; justify-content: center;
+          padding: 20px;
+          animation: fadeIn 0.2s ease;
+          cursor: zoom-out;
+        }
+        .lightbox-img {
+          max-width: 90vw; max-height: 90vh;
+          object-fit: contain; border-radius: var(--radius);
+          animation: scaleIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .lightbox-close {
+          position: fixed; top: 20px; right: 24px;
+          background: rgba(255,255,255,0.1); color: white;
+          border: 1px solid rgba(255,255,255,0.2);
+          width: 40px; height: 40px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; font-size: 16px;
+          transition: background 0.2s;
+        }
+        .lightbox-close:hover { background: rgba(255,255,255,0.2); }
         .product-badge {
           position: absolute;
           top: 14px; left: 14px;
