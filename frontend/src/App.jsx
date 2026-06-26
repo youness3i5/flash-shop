@@ -14,6 +14,7 @@ import Success from './pages/Success.jsx';
 import Admin from './pages/Admin.jsx';
 import Help from './pages/Help.jsx';
 import NotFound from './pages/NotFound.jsx';
+import Legal from './pages/Legal.jsx';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -103,6 +104,7 @@ export default function App() {
               <Route path="/success" element={<Success />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/aide" element={<Help />} />
+              <Route path="/legal/:page" element={<Legal />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </PageWrapper>

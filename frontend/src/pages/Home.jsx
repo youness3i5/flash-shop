@@ -220,9 +220,13 @@ export default function Home() {
           </div>
         </div>
         <div className="footer-bottom">
-          <div className="container">
+          <div className="container footer-bottom-inner">
             <span>© 2026 FlashShop — Tous droits réservés</span>
-            <span>Made with ❤️ en France</span>
+            <div className="footer-legal">
+              <Link to="/legal/cgv">CGV</Link>
+              <Link to="/legal/mentions">Mentions légales</Link>
+              <a href="mailto:flashshop.contact@gmail.com">Contact</a>
+            </div>
           </div>
         </div>
       </footer>
@@ -486,7 +490,10 @@ export default function Home() {
           padding: 18px 0;
           font-size: 12.5px;
         }
-        .footer-bottom .container { display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .footer-legal { display: flex; gap: 16px; align-items: center; }
+        .footer-legal a { font-size: 12px; color: rgba(255,255,255,0.4); transition: color 0.2s; }
+        .footer-legal a:hover { color: rgba(255,255,255,0.8); }
 
         @media (max-width: 960px) {
           .hero-inner { grid-template-columns: 1fr; }
