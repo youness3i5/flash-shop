@@ -39,6 +39,7 @@ export default function ProductCard({ product, index = 0 }) {
 
   const stars = 4 + Math.floor(Math.abs(product.id?.charCodeAt(1) - 50) % 2);
   const reviews = 18 + (parseInt(product.id?.replace('p', '') || '1') * 7);
+  const sold = 40 + (parseInt(product.id?.replace('p', '') || '1') * 17) % 200;
   const delay = Math.min(index, 7) * 0.06;
 
   return (
@@ -74,6 +75,7 @@ export default function ProductCard({ product, index = 0 }) {
           <span className="stars-empty">{'☆'.repeat(5 - stars)}</span>
           <span className="card-reviews">({reviews})</span>
         </div>
+        <div className="card-sold">🔥 {sold} commandés</div>
         <div className="card-footer">
           <span className="card-price">{product.price.toFixed(2)} €</span>
           <button
@@ -175,6 +177,11 @@ export default function ProductCard({ product, index = 0 }) {
         .card-reviews {
           color: var(--text-light); font-size: 11px;
           margin-left: 4px; font-weight: 500;
+        }
+        .card-sold {
+          font-size: 11px; font-weight: 700; color: #c2410c;
+          background: #fff7ed; border-radius: 12px;
+          padding: 3px 8px; display: inline-block;
         }
 
         .card-footer {

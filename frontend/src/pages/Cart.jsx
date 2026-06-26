@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext.jsx';
 
 export default function Cart() {
   const { items, totalPrice, updateQuantity, removeItem, clearCart } = useCart();
+  const [promo, setPromo] = useState('');
+  const [promoMsg, setPromoMsg] = useState(null);
+
+  function applyPromo(e) {
+    e.preventDefault();
+    if (promo.trim().toUpperCase() === 'FLASH10') {
+      setPromoMsg({ type: 'success', text: '✓ Code FLASH10 appliqué — -10% (bientôt disponible)' });
+    } else {
+      setPromoMsg({ type: 'error', text: 'Code promo invalide ou expiré.' });
+    }
+  }
   const shipping = totalPrice >= 50 ? 0 : 4.99;
   const total = totalPrice + shipping;
   const freeShippingProgress = Math.min((totalPrice / 50) * 100, 100);
@@ -98,6 +109,20 @@ export default function Cart() {
                 {shipping === 0 ? '🎉 Gratuite' : `${shipping.toFixed(2)} €`}
               </span>
             </div>
+            <form className="promo-form" onSubmit={applyPromo}>
+              <input
+                className="promo-input"
+                placeholder="Code promo"
+                value={promo}
+                onChange={e => { setPromo(e.target.value); setPromoMsg(null); }}
+              />
+              <button type="submit" className="promo-btn">Appliquer</button>
+            </form>
+            {promoMsg && (
+              <p className={promoMsg.type === 'success' ? 'success-msg' : 'error-msg'} style={{ fontSize: 12, padding: '8px 12px' }}>
+                {promoMsg.text}
+              </p>
+            )}
             <div className="sum-divider" />
             <div className="sum-row sum-total">
               <span>Total</span>
@@ -203,6 +228,15 @@ export default function Cart() {
           display: flex; justify-content: space-between;
           font-size: 14px; color: var(--text-muted);
         }
+        .promo-form { display: flex; gap: 8px; margin-bottom: 4px; }
+        .promo-input { flex: 1; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-sm); }
+        .promo-btn {
+          background: var(--bg-gray); border: 1.5px solid var(--border);
+          border-radius: var(--radius-sm); padding: 10px 14px;
+          font-size: 13px; font-weight: 700; font-family: 'Poppins', sans-serif;
+          cursor: pointer; white-space: nowrap; transition: all 0.2s;
+        }
+        .promo-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
         .sum-divider { height: 1px; background: var(--border); }
         .sum-total { font-size: 15px; font-weight: 700; color: var(--text); }
         .sum-total-amount { font-size: 24px; font-weight: 900; color: var(--primary); }
